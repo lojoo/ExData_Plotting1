@@ -1,0 +1,17 @@
+setwd("C:/Users/Loko/Desktop/Coursera/EXPLORATORY")
+Sys.setlocale("LC_TIME", "English")
+Fiverows <- read.table("household_power_consumption.txt", header=TRUE, sep=";", nrow=5)
+classes <- sapply(Fiverows, class)
+data <- read.table("household_power_consumption.txt",sep=";",colClasses=classes,
+skip=grep("31/1/2007;23:59:00",readLines("household_power_consumption.txt")), nrow=2880)
+names(data) <- names(Fiverows)
+data$DT <- paste(data$Date, data$Time)
+data$DT <- strptime(data$DT, "%d/%m/%Y %H:%M:%S")
+
+png(file="plot3.png")
+with(data,plot(DT,Sub_metering_1, xlab="", ylab="Energy sub metering", type="n"))
+with(data,lines(DT,Sub_metering_1))
+with(data,lines(DT,Sub_metering_2,col="red"))
+with(data,lines(DT,Sub_metering_3, col="blue"))
+legend("topright", lwd=1,col=c("black","red","blue"),legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+dev.off()
